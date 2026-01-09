@@ -1,0 +1,87 @@
+HELP.md
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
+
+### AI Server ###
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
+
+# Virtual Environments
+ai_server/venv/
+ai_server/myenv310/
+ai_server/myenv312/
+ai_server/env/
+
+# Model Files (large binary files, retrain as needed)
+ai_server/models/*.pth
+ai_server/models/*.pt
+
+# Large model files
+ai_server/models/*.pth
+ai_server/models/*.pkl
+ai_server/best_voice_model_xgb.pkl
+ai_server/scaler.pkl
+ai_server/label_encoder.pkl
+
+# Training outputs
+ai_server/training.log
+ai_server/training_history.png
+ai_server/*.png
+ai_server/*.log
+ai_server/nohup.out
+
+# Temporary/Setup files
+ai_server/create_files.py
+ai_server/setup_all.sh
+ai_server/transfer_to_server.ps1
+ai_server/create_folders.sh
+
+# Deployment guides (contains sensitive server info)
+DEPLOYMENT_STEPS.md
+ORACLE_GPU_GUIDE.md
+DEPLOY_GUIDE.md
+
+# Uploads
+uploads/
+
+### Frontend ###
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.env.local
