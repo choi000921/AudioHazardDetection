@@ -41,7 +41,7 @@ npm run dev
 ```bash
 cd ai_server
 pip install -r requirements.txt
-python start_server.py
+python main.py
 ```
 
 ### 5. 웹 애플리케이션 접속
