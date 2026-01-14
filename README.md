@@ -36,7 +36,17 @@ npm install
 npm run dev
 ```
 
-### 4. AI 서버 실행 (선택사항)
+### 4. AI 서버 실행 (필수)
+
+AI 서버(ai_server)는 PyTorch 기반 모델을 사용하므로 아래 라이브러리를 먼저 설치한 후 실행해야 합니다.
+
+PyTorch 설치
+pip install torch torchvision torchaudio
+
+오디오 및 AI 관련 라이브러리 설치
+pip install librosa transformers
+pip install matplotlib scipy
+pip install datasets
 
 ```bash
 cd ai_server
