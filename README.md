@@ -52,6 +52,7 @@ pip install matplotlib scipy
 pip install datasets
 ```
 
+AI 서버 실행
 ```bash
 cd ai_server
 pip install -r requirements.txt
