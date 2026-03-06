@@ -5,16 +5,70 @@
 
 PyTorch 기반 AI 모델을 사용하여 짧은 음성 파일에서 응급상황을 감지하는 웹 애플리케이션입니다.
 
+자세한 기획 배경과 일정, 팀 구성 등은 `PROJECT_PLAN.md`를 참고하세요.
+
+## 📸 데모 스크린샷
+
+| 로그인 | 대시보드 |
+|---|---|
+| ![로그인](./KakaoTalk_20260306_191551701.png) | ![대시보드](./KakaoTalk_20260306_191551701_01.png) |
+
+| 실시간 감지 | 오디오 업로드 |
+|---|---|
+| ![실시간 감지](./KakaoTalk_20260306_191551701_02.png) | ![오디오 업로드](./KakaoTalk_20260306_191551701_10.png) |
+
+| 분석 | 이벤트 |
+|---|---|
+| ![분석](./KakaoTalk_20260306_191551701_05.png) | ![이벤트](./KakaoTalk_20260306_191551701_03.png) |
+
 ## 🏗️ 시스템 구조
 
 - **Frontend**: React + Vite (포트 5173)
 - **Backend**: Spring Boot (포트 8080)
-- **Database**: MySQL (포트 3306)
+- **Database**: 기본값은 H2(In-Memory). 필요 시 MySQL로 전환 가능
 - **AI Server**: FastAPI + PyTorch (포트 8001)
+
+```mermaid
+flowchart LR
+  FE[Frontend\nReact+Vite :5173] -->|API| BE[Backend\nSpring Boot :8080]
+  BE -->|분석 요청| AI[AI Server\nFastAPI :8001]
+  BE -->|저장/조회| DB[(DB\nH2 기본 / MySQL 선택)]
+```
 
 ## 🚀 실행 방법
 
-### 1. MySQL 데이터베이스 준비
+### 0. 사전 요구사항
+
+- **Python**: 3.8+
+- **Node.js**: 16+
+- **Java**: 17+
+
+### 1. AI 서버 실행 (필수)
+
+AI 서버(`ai_server`)는 PyTorch 기반 분석을 수행합니다.
+
+```bash
+cd ai_server
+pip install -r requirements.txt
+python main.py
+```
+
+### 2. Spring Boot 백엔드 실행
+
+```bash
+./gradlew bootRun
+```
+
+#### DB 설정 (중요)
+
+현재 기본 설정은 **H2(In-Memory)** 입니다.
+
+- **H2 콘솔**: `http://localhost:8080/h2-console`
+- **JDBC URL**: `jdbc:h2:mem:alertory`
+- **username**: `sa`
+- **password**: (비어있음)
+
+MySQL로 전환하려면 `src/main/resources/application.properties`를 MySQL 설정으로 바꾸고 DB를 준비하세요.
 
 ```bash
 # MySQL 서버 실행 후
@@ -22,10 +76,14 @@ mysql -u root -p
 CREATE DATABASE alertory;
 ```
 
-### 2. Spring Boot 백엔드 실행
+예시(참고용):
 
-```bash
-./gradlew bootRun
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/alertory?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+spring.datasource.username=root
+spring.datasource.password=비밀번호
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.database-platform=org.hibernate.dialect.MySQL8Dialect
 ```
 
 ### 3. React 프론트엔드 실행
@@ -36,32 +94,9 @@ npm install
 npm run dev
 ```
 
-### 4. AI 서버 실행 (필수)
+### 4. 웹 애플리케이션 접속
 
-AI 서버(ai_server)는 PyTorch 기반 모델을 사용하므로 아래 라이브러리를 먼저 설치한 후 실행해야 합니다.
-
-PyTorch 설치
-```
-pip install torch torchvision torchaudio
-```
-
-오디오 및 AI 관련 라이브러리 설치
-```
-pip install librosa transformers
-pip install matplotlib scipy
-pip install datasets
-```
-
-AI 서버 실행
-```bash
-cd ai_server
-pip install -r requirements.txt
-python main.py
-```
-
-### 5. 웹 애플리케이션 접속
-
-http://localhost:5173 에서 애플리케이션을 사용할 수 있습니다.
+`http://localhost:5173` 에서 애플리케이션을 사용할 수 있습니다.
 
 ## 🧪 인증 시스템 테스트 절차
 
@@ -159,6 +194,9 @@ http://localhost:5173 에서 애플리케이션을 사용할 수 있습니다.
 ai_server/models/
 ├── dccrn_model.pth  # 노이즈 제거 모델
 ```
+
+> 참고: `ai_server/models/*.pth` 같은 **대용량 모델 파일은 `.gitignore`에 의해 커밋에서 제외**됩니다.
+> 모델을 사용하려면 로컬에 직접 넣거나, 학습 스크립트로 생성해야 합니다.
 
 ### 분석 로직
 1. 오디오 전처리 (16kHz, 3초)
